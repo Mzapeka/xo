@@ -17,7 +17,6 @@ class Game
     const SIZE_Y = 3;
 
     const LENGTH_TO_WIN = 3;
-bosch2018                                                               
 
     public $board = [];
     public $id;
@@ -25,11 +24,28 @@ bosch2018
     public $opponent;
     public $steps = 0;
 
+    public $userName;
+    public $opponentName;
+
+    public $userTurn;
+    public $opponentTurn;
+
+    public $currentTurn;
+
+    public $winner;
+
+    /**
+     * Game constructor.
+     * @param $user
+     * @param $oponent
+     * @throws \yii\base\Exception
+     */
     public function __construct($user, $oponent)
     {
         $this->user = $user;
         $this->opponent = $oponent;
         $this->id = \Yii::$app->security->generateRandomString(32);
+        $this->generateTurn();
     }
 
     /**
@@ -40,17 +56,21 @@ bosch2018
      */
     public function go(int $x, int $y, string $user): ?bool
     {
-        if (!ArrayHelper::getValue($this->board, [$x, $y], false)) {
+        if (ArrayHelper::getValue($this->board, [$x, $y], false)) {
             return false;
         }
         ArrayHelper::setValue($this->board, [$x, $y], $this->getTurn($user));
         $this->steps++;
-        return $this->checkWinner($this->getTurn($user));
+        $this->switchTurn();
+        if ($winner = $this->checkWinner($this->getTurn($user))) {
+            $this->winner = $user;
+        }
+        return $winner;
     }
 
     private function getTurn(string $user): string
     {
-        return ($user === $this->user ? 'X' : 'O');
+        return ($user === $this->user ? $this->userTurn : $this->opponentTurn);
     }
 
     /**
@@ -116,5 +136,22 @@ bosch2018
             }
         }
         return false;
+    }
+
+    /**
+     *
+     */
+    private function generateTurn()
+    {
+        $turns = ['X', 'O'];
+        shuffle($turns);
+        $this->userTurn = array_shift($turns);
+        $this->opponentTurn = array_shift($turns);
+        $this->currentTurn = $this->user;
+    }
+
+    private function switchTurn(): void
+    {
+        $this->currentTurn = $this->currentTurn === $this->user ? $this->opponent : $this->user;
     }
 }

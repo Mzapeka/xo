@@ -9,7 +9,6 @@
 namespace app\models;
 
 use http\Exception\RuntimeException;
-use phpDocumentor\Reflection\Types\Array_;
 use yii\caching\Cache;
 use yii\helpers\ArrayHelper;
 
@@ -60,8 +59,9 @@ class Engine
      * Start new game
      * @param string $user
      * @return Game|bool
+     * @throws \yii\base\Exception
      */
-    public function startGame(string $user)
+    public function startGame(string $user, string $name = null)
     {
         if (count($this->waitingUsers) > 0) {
             $oponent = array_shift($this->waitingUsers);
@@ -76,6 +76,10 @@ class Engine
         return false;
     }
 
+    /**
+     * @param $user
+     * @return bool
+     */
     public function end($user)
     {
         ArrayHelper::removeValue($this->waitingUsers, $user);
@@ -97,6 +101,7 @@ class Engine
     }
 
     /**
+     * @param string $key
      * @return array|mixed
      */
     private function getDataFromStore(string $key)
@@ -142,10 +147,9 @@ class Engine
     /**
      * @return bool
      */
-    private function unblockEngine()
+    private function unblockEngine(): bool
     {
         $this->cash->delete('blockFlag');
         return true;
     }
-
 }
