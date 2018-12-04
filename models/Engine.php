@@ -11,6 +11,7 @@ namespace app\models;
 use http\Exception\RuntimeException;
 use yii\caching\Cache;
 use yii\helpers\ArrayHelper;
+use yii\web\HttpException;
 
 /**
  * @property array $games
@@ -97,6 +98,7 @@ class Engine
         $opponent = $game->user === $user ? $game->user : $game->opponent;
         ArrayHelper::remove($this->games, $gameId);
         ArrayHelper::remove($this->users, $user);
+        ArrayHelper::remove($this->users, $opponent);
         return true;
     }
 

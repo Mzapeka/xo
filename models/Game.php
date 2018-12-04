@@ -18,6 +18,11 @@ class Game
 
     const LENGTH_TO_WIN = 3;
 
+    const NO_WINNER_STATUS = 'none';
+
+    const GAME_STATUS_NO_ACTION = 'no_action';
+    const GAME_STATUS_UPDATE = 'update';
+
     public $board = [];
     public $id;
     public $user;
@@ -49,21 +54,26 @@ class Game
     }
 
     /**
-     * @param int $x
-     * @param int $y
+     * @param Step $step
      * @param string $user
      * @return bool|null
      */
-    public function go(int $x, int $y, string $user): ?bool
+    public function go(Step $step, string $user): ?bool
     {
-        if (ArrayHelper::getValue($this->board, [$x, $y], false)) {
+        if (ArrayHelper::getValue($this->board, [$step->x, $step->y], false)) {
             return false;
         }
-        ArrayHelper::setValue($this->board, [$x, $y], $this->getTurn($user));
+        ArrayHelper::setValue($this->board, [$step->x, $step->y], $this->getTurn($user));
         $this->steps++;
         $this->switchTurn();
-        if ($winner = $this->checkWinner($this->getTurn($user))) {
-            $this->winner = $user;
+        $winner = $this->checkWinner($this->getTurn($user));
+        switch ($winner) {
+            case true:
+                $this->winner = $user;
+                break;
+            case self::NO_WINNER_STATUS:
+                $this->winner = self::NO_WINNER_STATUS;
+                break;
         }
         return $winner;
     }
@@ -80,7 +90,7 @@ class Game
     private function checkWinner(string $turn)
     {
         if ((count($this->board, COUNT_RECURSIVE) - count($this->board)) === self::SIZE_X * self::SIZE_Y) {
-            return 'none';
+            return self::NO_WINNER_STATUS;
         }
 
         // check X axes
@@ -136,6 +146,15 @@ class Game
             }
         }
         return false;
+    }
+
+    /**
+     * @param string $userId
+     * @return mixed
+     */
+    public function getOpponentId(string $userId)
+    {
+        return $userId === $this->user ? $this->opponent : $this->user;
     }
 
     /**
