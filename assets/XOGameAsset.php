@@ -15,13 +15,15 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class XOAsset extends AssetBundle
+class XOGameAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-
+    public $css = [
+        'css/xo.css',
+    ];
     public $js = [
-        'js/xo.js'
+        'js/game.js'
     ];
     public $depends = [
         AppAsset::class

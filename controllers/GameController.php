@@ -41,7 +41,7 @@ class GameController extends Controller
         return $answer;
     }
 
-    public function actionGameStatusConfirmation()
+    public function actionGameStatusConfirmation(): array
     {
         Yii::$app->cache->set('game_status_' . $this->userId, Game::GAME_STATUS_NO_ACTION, 60 * 3);
         return ['result' => 'OK'];
@@ -57,20 +57,7 @@ class GameController extends Controller
             throw new HttpException(403, 'Wrong data format passed');
         }
 
-        $gameId = $this->engine->users[$this->userId] ?? false;
-        if (!$gameId) {
-            throw new HttpException(404, 'Game not found');
-        }
-
-        $game = $this->engine->games[$gameId] ?? false;
-
-        if (!$game) {
-            throw new HttpException(404, 'Game not found');
-        }
-        /**
-         * @var Game $gameObj
-         */
-        $gameObj = unserialize($game, [Game::class]);
+        $gameObj = $this->engine->getGameByUserId($this->userId);
 
         if ($step->validate()) {
             $gameObj->go($step, $this->userId);
@@ -80,9 +67,16 @@ class GameController extends Controller
         throw new HttpException(403, 'Given wrong parameters: ' . print_r($step->getErrors(), true));
     }
 
-    public function actionEndGame()
+    /**
+     * @return array
+     * @throws HttpException
+     */
+    public function actionEndGame(): array
     {
-
+        $gameObj = $this->engine->getGameByUserId($this->userId);
+        $gameObj->winner = $gameObj->getOpponentId($this->userId);
+        $this->sendMessage($gameObj);
+        return ['result' => 'OK'];
     }
 
     /**
@@ -109,23 +103,31 @@ class GameController extends Controller
      */
     private function sendMessage(Game $game)
     {
-        if ($game->winner) {
+        if (!$game->winner) {
             $this->engine->games[$game->id] = serialize($game);
         } else {
             $this->engine->end($this->userId);
         }
         $opponentId = $game->getOpponentId($this->userId);
         Yii::$app->cache->set(
-            'game_status_' . $this->userId, Game::GAME_STATUS_UPDATE, 3 * 60
+            'game_status_' . $this->userId,
+            Game::GAME_STATUS_UPDATE,
+            3 * 60
         );
         Yii::$app->cache->set(
-            'game_status_' . $opponentId, Game::GAME_STATUS_UPDATE, 3 * 60
+            'game_status_' . $opponentId,
+            Game::GAME_STATUS_UPDATE,
+            3 * 60
         );
         Yii::$app->cache->set(
-            'game_data_' . $this->userId, $this->prepareGameData($game, $this->userId), 3 * 60
+            'game_data_' . $this->userId,
+            $this->prepareGameData($game, $this->userId),
+            3 * 60
         );
         Yii::$app->cache->set(
-            'game_data_' . $opponentId, $this->prepareGameData($game, $opponentId), 3 * 60
+            'game_data_' . $opponentId,
+            $this->prepareGameData($game, $opponentId),
+            3 * 60
         );
     }
 }

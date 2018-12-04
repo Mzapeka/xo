@@ -62,18 +62,18 @@ class Engine
      * @return Game|bool
      * @throws \yii\base\Exception
      */
-    public function startGame(string $user, string $name = null)
+    public function startGame(string $user, string $userName = null)
     {
         if (count($this->waitingUsers) > 0) {
             $oponent = array_shift($this->waitingUsers);
-            $game = new Game($user, $oponent);
+            $game = new Game($user, $oponent['id'], $userName, $oponent['name']);
             $id = $game->id;
             $this->games[$id] = serialize($game);
             $this->users[$user] = $id;
             $this->users[$oponent] = $id;
             return $game;
         }
-        $this->waitingUsers[] = $user;
+        $this->waitingUsers[] = ['id' => $user, 'name' => $userName];
         return false;
     }
 
@@ -100,6 +100,29 @@ class Engine
         ArrayHelper::remove($this->users, $user);
         ArrayHelper::remove($this->users, $opponent);
         return true;
+    }
+
+    /**
+     * @param string $userId
+     * @return Game
+     * @throws HttpException
+     */
+    public function getGameByUserId(string $userId): Game
+    {
+        $gameId = $this->engine->users[$userId] ?? false;
+        if (!$gameId) {
+            throw new HttpException(404, 'Game not found');
+        }
+        $game = $this->engine->games[$gameId] ?? false;
+
+        if (!$game) {
+            throw new HttpException(404, 'Game not found');
+        }
+        /**
+         * @var Game $gameObj
+         */
+        $gameObj = unserialize($game, [Game::class]);
+        return $gameObj;
     }
 
     /**

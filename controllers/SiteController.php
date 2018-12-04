@@ -63,6 +63,13 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionTik()
+    {
+        return $this->render(
+            'gameField'
+        );
+    }
+
 
     /**
      * @param $name
@@ -98,15 +105,5 @@ class SiteController extends Controller
             'gameField',
             ['id' => Yii::$app->session->get('userId'), 'name' => Yii::$app->session->get('name')]
         );
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 }

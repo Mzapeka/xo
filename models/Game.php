@@ -9,6 +9,7 @@
 namespace app\models;
 
 use yii\helpers\ArrayHelper;
+use yii\web\HttpException;
 
 
 class Game
@@ -41,14 +42,18 @@ class Game
 
     /**
      * Game constructor.
-     * @param $user
-     * @param $oponent
+     * @param string $user
+     * @param string $oponent
+     * @param string $userName
+     * @param string $opponentName
      * @throws \yii\base\Exception
      */
-    public function __construct($user, $oponent)
+    public function __construct(string $user, string $oponent, string $userName, string $opponentName)
     {
         $this->user = $user;
         $this->opponent = $oponent;
+        $this->userName = $userName;
+        $this->opponentName = $opponentName;
         $this->id = \Yii::$app->security->generateRandomString(32);
         $this->generateTurn();
     }
@@ -57,11 +62,12 @@ class Game
      * @param Step $step
      * @param string $user
      * @return bool|null
+     * @throws HttpException
      */
     public function go(Step $step, string $user): ?bool
     {
         if (ArrayHelper::getValue($this->board, [$step->x, $step->y], false)) {
-            return false;
+            throw new HttpException(422, 'This cell already hold.');
         }
         ArrayHelper::setValue($this->board, [$step->x, $step->y], $this->getTurn($user));
         $this->steps++;
@@ -169,8 +175,29 @@ class Game
         $this->currentTurn = $this->user;
     }
 
+    /**
+     *
+     */
     private function switchTurn(): void
     {
         $this->currentTurn = $this->currentTurn === $this->user ? $this->opponent : $this->user;
+    }
+
+    /**
+     * @param string $userId
+     * @return string
+     */
+    public function getYourName(string $userId): string
+    {
+        return $userId === $this->user ? $this->userName : $this->opponentName;
+    }
+
+    /**
+     * @param string $userId
+     * @return string
+     */
+    public function getOpponentName(string $userId): string
+    {
+        return $userId === $this->user ? $this->opponentName : $this->userName;
     }
 }

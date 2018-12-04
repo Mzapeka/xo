@@ -1,0 +1,230 @@
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+@font-face {
+    font-face-name: Linas;
+    font-family: Linas;
+    src: url(fonts/Linas.ttf);
+}
+
+@font-face {
+    font-face-name: Dadhand;
+    font-family: Dadhand;
+    src: url(fonts/Dadhand.ttf);
+}
+
+@font-face {
+    font-face-name: Dark;
+    font-family: Dark;
+    src: url(fonts/dark_half.ttf);
+}
+
+@font-face {
+    font-face-name: Wacky;
+    font-family: Wacky;
+    src: url(fonts/Wacky.ttf);
+}
+
+@keyframes oponentsAnim {
+    0% {
+        margin-top: -10%;
+    }
+
+    50% {
+        margin-top: 0.5%;
+    }
+
+    100% {
+        margin-top: 0;
+    }
+}
+
+@keyframes fieldAnim {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+@keyframes result {
+    0% {
+        position: absolute;
+        font-size: 100%;
+
+    }
+
+    25% {
+        position: relative;
+        top: -50%;
+        font-size: 125%;
+    }
+    50% {
+        position: relative;
+        top: -100%;
+        font-size: 150%;
+    }
+    75% {
+        position: relative;
+        top: -50%;
+        font-size: 125%;
+
+    }
+
+    100% {
+        position: relative;
+        font-size: 100%;
+    }
+}
+
+#preloaderbg {
+    display: none;
+    width:100%;
+    height:100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    background-color: #c7ddef;
+}
+
+.preloader-message{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.32rem;
+    font-size: 0.1rem;
+}
+
+.demo{ background-color: #2b103d; }
+.preloader{
+    margin-top: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loader {
+    font-size: 20px;
+    width: 10em;
+    height: 10em;
+    margin: 0 auto;
+}
+.loader::before,
+.loader::after {
+    content: '';
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    box-shadow:
+            0 0, 2em 0, 4em 0, 6em 0,
+            0 2em, 2em 2em, 4em 2em, 6em 2em,
+            0 4em, 2em 4em, 4em 4em, 6em 4em,
+            0 6em, 2em 6em, 4em 6em, 6em 6em;
+    border-radius: 50%;
+    position: absolute;
+    animation: round 2s ease infinite;
+}
+.loader::before { color: #e58228; }
+.loader::after {
+    color: #13afbe;
+    animation-delay: -1s;
+}
+@keyframes round {
+    0% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(3em) translateY(0); }
+    50% { transform: translateX(3em) translateY(3em); }
+    75% { transform: translateX(0) translateY(3em); }
+}
+
+html, body {
+    height: 100%;
+    font-size: 200px;
+}
+
+.wrapper {
+    margin: 0 auto;
+    background-color: #eee;
+    height: 94%;
+}
+
+
+.xo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50%;
+}
+
+.xo__field {
+    width: 2.1rem;
+    height: 2.1rem;
+}
+
+.xo__row {
+    display:flex;
+    width: 100%;
+    height: 30%;
+}
+
+.ttoe__row--border {
+    border-top: 0.1rem solid #e58228;
+    border-bottom: 0.1rem solid #e58228;
+}
+
+.xo__cells {
+    display: flex;
+    position: relative;
+    z-index: 10;
+    width: 33%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
+
+.xo__cells--border {
+    border-left: 0.1rem solid #e58228;
+    border-right: 0.1rem solid #e58228;
+}
+
+.xo__cells-o::before {
+    content: 'o';
+    font-family: Linas;
+    font-size: 0.5rem;
+    color: #13afbe;
+}
+
+.xo__cells-x::before {
+    content: 'x';
+    font-family: Dadhand;
+    font-size: 1rem;
+    color: #7db78e;
+    padding-bottom: 0.1rem;
+}
+
+.game-info {
+    height: 50%;
+}
+
+.xo__game-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45%;
+    font-family: Dark;
+    font-size: 0.6rem;
+    font-weight: bold;
+    word-spacing: -0.1rem;
+    color: #14abb9;
+}
