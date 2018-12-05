@@ -36,7 +36,7 @@ class Game
     public $userTurn;
     public $opponentTurn;
 
-    public $currentTurn;
+    public $activeUser;
 
     public $winner;
 
@@ -172,7 +172,7 @@ class Game
         shuffle($turns);
         $this->userTurn = array_shift($turns);
         $this->opponentTurn = array_shift($turns);
-        $this->currentTurn = $this->user;
+        $this->activeUser = $this->user;
     }
 
     /**
@@ -180,7 +180,7 @@ class Game
      */
     private function switchTurn(): void
     {
-        $this->currentTurn = $this->currentTurn === $this->user ? $this->opponent : $this->user;
+        $this->activeUser = $this->activeUser === $this->user ? $this->opponent : $this->user;
     }
 
     /**
@@ -199,5 +199,13 @@ class Game
     public function getOpponentName(string $userId): string
     {
         return $userId === $this->user ? $this->opponentName : $this->userName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentTurn(): string
+    {
+        return $this->activeUser === $this->user ? $this->userTurn : $this->opponentTurn;
     }
 }

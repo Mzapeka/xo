@@ -31,7 +31,7 @@ class GameController extends Controller
         parent::__construct($id, $module, $config);
     }
 
-    public function actionGameStatus()
+    public function actionStatus()
     {
         $gameData = Yii::$app->cache->get('game_data_' . $this->userId);
         $answer = [
@@ -41,7 +41,7 @@ class GameController extends Controller
         return $answer;
     }
 
-    public function actionGameStatusConfirmation(): array
+    public function actionGetStatusConfirm(): array
     {
         Yii::$app->cache->set('game_status_' . $this->userId, Game::GAME_STATUS_NO_ACTION, 60 * 3);
         return ['result' => 'OK'];
@@ -90,7 +90,8 @@ class GameController extends Controller
             [
                 'gameId' => $game->id,
                 'board' => $game->board,
-                'currentTurn' => $game->currentTurn,
+                'currentTurn' => $game->getCurrentTurn(),
+                'activeUser' => $game->activeUser,
                 'yourName' => $game->getYourName($userId),
                 'opponentName' => $game->getOpponentName($userId),
                 'winner' => $game->winner

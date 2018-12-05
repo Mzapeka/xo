@@ -61,12 +61,12 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
   # hosts settings (host machine)
-  config.vm.provision :hostmanager
-  config.hostmanager.enabled            = true
-  config.hostmanager.manage_host        = true
-  config.hostmanager.ignore_private_ip  = false
-  config.hostmanager.include_offline    = true
-  config.hostmanager.aliases            = domains.values
+  #config.vm.provision :hostmanager
+  #config.hostmanager.enabled            = true
+  #config.hostmanager.manage_host        = true
+  #config.hostmanager.ignore_private_ip  = false
+  #config.hostmanager.include_offline    = true
+  #config.hostmanager.aliases            = domains.values
 
   # quick fix for failed guest additions installations
   # config.vbguest.auto_update = false

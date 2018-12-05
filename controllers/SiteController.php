@@ -94,7 +94,7 @@ class SiteController extends Controller
                 $gameData = json_encode([
                     'gameId' => $game->id,
                     'board' => $game->board,
-                    'currentTurn' => $game->currentTurn,
+                    'currentTurn' => $game->activeUser,
                     'winner' => $game->winner
                 ]);
                 Yii::$app->cache->set('message' . $game->opponent, $gameData, 60);

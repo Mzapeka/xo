@@ -151,6 +151,11 @@ html, body {
     font-size: 200px;
 }
 
+
+.informer {
+    font-size: 10%;
+}
+
 .wrapper {
     margin: 0 auto;
     background-color: #eee;

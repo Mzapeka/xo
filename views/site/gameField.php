@@ -22,8 +22,8 @@
 </div>
 
 <section class="wrapper">
+    <div class="informer"></div>
     <section class="xo">
-
         <div class="xo__field">
             <div class="xo__row">
                 <div class="xo__cells xo__cells-o" data-x="0" data-y="0"></div>
@@ -43,8 +43,3 @@
         </div>
     </section>
 </section>
-
-<script type="text/javascript">
-   // document.getElementById('preloaderbg').style.display = 'block';
-   // document.body.style.overflow = 'hidden';
-</script>
