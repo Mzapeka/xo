@@ -21,8 +21,10 @@ class XOGameAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/xo.css',
+        'css/loader.css',
     ];
     public $js = [
+        'js/updater.js',
         'js/game.js'
     ];
     public $depends = [

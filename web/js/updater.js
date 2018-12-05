@@ -3,11 +3,14 @@ function Updater(config) {
     let _deafultConfig = {
         updateInterval: 500,
         eventCallback: function (data) {},
+        connectionErrorCallback: function () {}
     };
     this._config = Object.assign({}, _deafultConfig, config);
 
     let isActive = false;
     let lastState = {};
+
+    let errorCounter = 20;
 
     this.activate = function () {
         isActive = true;
@@ -20,17 +23,26 @@ function Updater(config) {
     this.init = function () {
         setInterval(function () {
             if (isActive) {
-                $.ajax('game/status', {
-                    url: 'game/status',
+                $.ajax({
+                    url: '/status/get',
                     type: 'POST',
                     dataType: 'json',
                     success: function (data) {
-                        if(data.status === 'update') {
+                        if (data.status === 'update') {
                             lastState = data.data;
                             self._config.eventCallback(lastState);
+                            $.post('/status/confirm');
                         }
+                    },
+                    error: function () {
+                        errorCounter--;
                     }
                 });
+                if (errorCounter < 0) {
+                    self.deactivate()
+                    errorCounter = 20;
+                    self._config.connectionErrorCallback()
+                }
             }
         }, self._config.updateInterval)
     }

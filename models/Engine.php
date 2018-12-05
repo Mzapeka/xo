@@ -8,7 +8,7 @@
 
 namespace app\models;
 
-use http\Exception\RuntimeException;
+use RuntimeException;
 use yii\caching\Cache;
 use yii\helpers\ArrayHelper;
 use yii\web\HttpException;
@@ -20,7 +20,7 @@ use yii\web\HttpException;
  */
 class Engine
 {
-    const MAX_ATTEMPTS_TO_CASH_ACCESS = 10;
+    const MAX_ATTEMPTS_TO_CASH_ACCESS = 50;
 
     const GAMES = 'games_key';
     const USERS = 'users_key';
@@ -59,6 +59,7 @@ class Engine
     /**
      * Start new game
      * @param string $user
+     * @param string|null $userName
      * @return Game|bool
      * @throws \yii\base\Exception
      */
@@ -70,7 +71,7 @@ class Engine
             $id = $game->id;
             $this->games[$id] = serialize($game);
             $this->users[$user] = $id;
-            $this->users[$oponent] = $id;
+            $this->users[$oponent['id']] = $id;
             return $game;
         }
         $this->waitingUsers[] = ['id' => $user, 'name' => $userName];
@@ -159,8 +160,8 @@ class Engine
     private function blockEngine(): bool
     {
         $accessAttemptCounter = 0;
-        while (!$this->cash->get('blockFlag')) {
-            usleep(1000);
+        while ($this->cash->get('blockFlag')) {
+            usleep(100000);
             if ($accessAttemptCounter++ > self::MAX_ATTEMPTS_TO_CASH_ACCESS) {
                 return false;
             }
@@ -176,5 +177,13 @@ class Engine
     {
         $this->cash->delete('blockFlag');
         return true;
+    }
+
+    /**
+     * @param array $array
+     */
+    public function addGame(array $array): void
+    {
+        array_merge($this->games, $array);
     }
 }

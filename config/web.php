@@ -45,10 +45,19 @@ $config = [
         ],
         'db' => $db,
 
+        'assetManager' => [
+            'appendTimestamp' => true,
+        ],
+
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => true,
+            'showScriptName' => false,
+            'enableStrictParsing' => false,
             'rules' => [
+                'GET /start' => 'site/start',
+                'GET /game/start/<name:\w+>' => 'game/start',
+                'POST /status/get' => 'status/get',
+                'POST /status/confirm' => 'status/confirm',
             ],
         ],
 

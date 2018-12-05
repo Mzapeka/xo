@@ -8,6 +8,7 @@ function Game(userId, userName) {
     this.isBlocked = true;
 
     this.init = function () {
+        this.waitingPreloaderStop();
         this.clearField();
         $('.xo__field').on('click', '.xo__cells', function (event) {
             if (self.isBlocked) {
@@ -69,6 +70,16 @@ function Game(userId, userName) {
         document.body.style.overflow = 'visible';
     };
 
+    self.waitingPreloaderStart = function () {
+        document.getElementById('preloader-start').style.display = 'flex';
+        $('.wrapper').css({opacity: '50%'});
+    };
+
+    self.waitingPreloaderStop = function () {
+        document.getElementById('preloader-start').style.display = 'none';
+        $('.wrapper').css({opacity: '100%'});
+    };
+
     this.showInfo = function (parameters) {
         let {type, text} = parameters;
         let alert = '<div class="alert alert-' + type + ' alert-dismissable">\n' +
@@ -80,8 +91,8 @@ function Game(userId, userName) {
     this.renderField = function () {
         this.clearField();
         $('.xo__cells').each(function (element) {
-            let x = element.attr('data-x');
-            let y = element.attr('data-y');
+            let x = $(this).attr('data-x');
+            let y = $(this).attr('data-y');
             let turnClass = '';
             if (typeof self.board[y] !== 'undefined' && typeof self.board[y][x] !== 'undefined') {
                 if (self.board[y][x] === 'X') {
@@ -122,7 +133,6 @@ function Game(userId, userName) {
                     this.endGameScrinShow();
                     return;
                 }
-                let winnerName = state.winner === self.userId ?self.userName : state.opponentName;
                 self.endGameScrinShow(state);
             }
         }
@@ -131,13 +141,18 @@ function Game(userId, userName) {
     this.updater = new Updater({
         eventCallback: function (state) {
             self.stateHandler(state);
+        },
+        connectionErrorCallback: function () {
+            self.showInfo({type: 'warning', text: 'Connection error'});
+            self.stopInitPreloader();
         }
     });
 }
 
 
 $(document).ready(function () {
-
+    let game = new Game(USER_ID, USER_NAME);
+    game.init();
 });
 
 

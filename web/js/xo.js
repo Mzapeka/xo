@@ -38,7 +38,7 @@ $(document).ready(function () {
             opacity: 0
         }, 1000);
         setTimeout(function(){
-            $(location).attr('href','/start/' + encodeURIComponent(name));
+            $(location).attr('href','/game/start/' + encodeURIComponent(name));
         },1000);
         //$(location).attr('href','/start');
         //window.location = window.location.host + '/start';

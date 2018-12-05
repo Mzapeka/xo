@@ -13,6 +13,7 @@ use app\models\Game;
 use app\models\Step;
 use Yii;
 use yii\base\Module;
+use yii\helpers\Html;
 use yii\rest\Controller;
 use yii\web\HttpException;
 
@@ -31,20 +32,20 @@ class GameController extends Controller
         parent::__construct($id, $module, $config);
     }
 
-    public function actionStatus()
+    public function actionStart($name)
     {
-        $gameData = Yii::$app->cache->get('game_data_' . $this->userId);
-        $answer = [
-            'status' => Yii::$app->cache->get('game_status_' . $this->userId),
-            'data' => $gameData ? json_decode($gameData) : [],
-        ];
-        return $answer;
-    }
+        Yii::$app->session->remove('userId');
+        Yii::$app->session->remove('name');
 
-    public function actionGetStatusConfirm(): array
-    {
-        Yii::$app->cache->set('game_status_' . $this->userId, Game::GAME_STATUS_NO_ACTION, 60 * 3);
-        return ['result' => 'OK'];
+        Yii::$app->session->set('name', Html::encode($name));
+        $userId = Yii::$app->security->generateRandomString();
+        Yii::$app->session->set('userId', $userId);
+        $game = $this->engine->startGame($userId, Html::encode($name));
+        if ($game instanceof Game) {
+            $this->sendMessage($game);
+        }
+
+        return $this->redirect('/site/start');
     }
 
     /**
@@ -105,7 +106,7 @@ class GameController extends Controller
     private function sendMessage(Game $game)
     {
         if (!$game->winner) {
-            $this->engine->games[$game->id] = serialize($game);
+            $this->engine->addGame([$game->id => serialize($game)]);
         } else {
             $this->engine->end($this->userId);
         }

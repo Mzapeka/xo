@@ -20,7 +20,14 @@
         <div class="loader"></div>
     </div>
 </div>
-
+<div id="preloader-start">
+    <div class="ploader">
+        <span class="ploader-inner-1"></span>
+        <span class="ploader-inner-2"></span>
+        <span class="ploader-inner-3"></span>
+        <span class="ploader-inner-4"></span>
+    </div>
+</div>
 <section class="wrapper">
     <div class="informer"></div>
     <section class="xo">
@@ -31,15 +38,23 @@
                 <div class="xo__cells xo__cells-x" data-x="2" data-y="0"></div>
             </div>
             <div class="xo__row  ttoe__row--border">
-                <div class="xo__cells xo__cells-o" data-x="0" data-y="1""></div>
-                <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="1"></div>
-                <div class="xo__cells xo__cells-o " data-x="2" data-y="1"></div>
+                <div class="xo__cells xo__cells-o" data-x="0" data-y="1"
+                ">
             </div>
-            <div class="xo__row">
-                <div class="xo__cells" data-x="0" data-y="2"></div>
-                <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="2"></div>
-                <div class="xo__cells xo__cells-x" data-x="2" data-y="2"></div>
-            </div>
+            <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="1"></div>
+            <div class="xo__cells xo__cells-o " data-x="2" data-y="1"></div>
+        </div>
+        <div class="xo__row">
+            <div class="xo__cells" data-x="0" data-y="2"></div>
+            <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="2"></div>
+            <div class="xo__cells xo__cells-x" data-x="2" data-y="2"></div>
+        </div>
         </div>
     </section>
 </section>
+
+
+<script>
+    var USER_ID = '<?=$id?>';
+    var USER_NAME = '<?=$name?>';
+</script>
