@@ -40,6 +40,7 @@ class GameController extends Controller
         Yii::$app->session->set('name', Html::encode($name));
         $userId = Yii::$app->security->generateRandomString();
         Yii::$app->session->set('userId', $userId);
+        $this->userId = $userId;
         $game = $this->engine->startGame($userId, Html::encode($name));
         if ($game instanceof Game) {
             $this->sendMessage($game);
@@ -55,10 +56,9 @@ class GameController extends Controller
     {
         $step = new Step();
         $step->setAttributes(Yii::$app->request->post());
-        $gameObj = $this->engine->getGameByUserId($this->userId);
 
         if ($step->validate()) {
-            $gameObj->go($step, $this->userId);
+            $gameObj = $this->engine->step($step, $this->userId);
             $this->sendMessage($gameObj);
             return ['result' => 'OK'];
         }
@@ -71,8 +71,7 @@ class GameController extends Controller
      */
     public function actionEnd(): array
     {
-        $gameObj = $this->engine->getGameByUserId($this->userId);
-        $gameObj->winner = $gameObj->getOpponentId($this->userId);
+        $gameObj = $this->engine->setOpponentWin($this->userId);
         $this->sendMessage($gameObj);
         return ['result' => 'OK'];
     }
@@ -102,11 +101,10 @@ class GameController extends Controller
      */
     private function sendMessage(Game $game)
     {
-        if (!$game->winner) {
-            $this->engine->addGame([$game->id => serialize($game)]);
-        } else {
+        if ($game->winner) {
             $this->engine->end($this->userId);
         }
+
         $opponentId = $game->getOpponentId($this->userId);
         Yii::$app->cache->set(
             'game_status_' . $this->userId,

@@ -38,20 +38,23 @@
                 <div class="xo__cells xo__cells-x" data-x="2" data-y="0"></div>
             </div>
             <div class="xo__row  ttoe__row--border">
-                <div class="xo__cells xo__cells-o" data-x="0" data-y="1"
-                ">
+                <div class="xo__cells xo__cells-o" data-x="0" data-y="1"></div>
+                <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="1"></div>
+                <div class="xo__cells xo__cells-o " data-x="2" data-y="1"></div>
             </div>
-            <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="1"></div>
-            <div class="xo__cells xo__cells-o " data-x="2" data-y="1"></div>
-        </div>
-        <div class="xo__row">
-            <div class="xo__cells" data-x="0" data-y="2"></div>
-            <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="2"></div>
-            <div class="xo__cells xo__cells-x" data-x="2" data-y="2"></div>
-        </div>
+            <div class="xo__row">
+                <div class="xo__cells" data-x="0" data-y="2"></div>
+                <div class="xo__cells xo__cells-x xo__cells--border" data-x="1" data-y="2"></div>
+                <div class="xo__cells xo__cells-x" data-x="2" data-y="2"></div>
+            </div>
         </div>
     </section>
 </section>
+<div class="jumbotron">
+    <p>
+        <button id="end-game" class="btn btn-lg btn-success">Abandon game</button>
+    </p>
+</div>
 
 
 <script>

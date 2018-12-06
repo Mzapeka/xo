@@ -25,14 +25,13 @@ function Game(userId, userName) {
             });
         });
 
-        $('.end-game').on('click', function () {
+        $('#end-game').on('click', function () {
             self.endGame();
         });
 
-        $('.new-game').on('click', function () {
+        $('#new-game').on('click', function () {
             $(location).attr('href','/start/' + encodeURIComponent(self.userName))
         });
-
 
         this.startInitPreloader();
         this.updater.init();
@@ -153,11 +152,10 @@ function Game(userId, userName) {
         connectionErrorCallback: function () {
             self.showInfo({type: 'warning', text: 'Connection error'});
             self.stopInitPreloader();
-        }
+        },
+        userId: this.userId,
     });
 }
-
-
 
     let game = new Game(USER_ID, USER_NAME);
     game.init();

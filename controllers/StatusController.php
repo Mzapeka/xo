@@ -29,6 +29,9 @@ class StatusController extends Controller
 
     public function actionGet()
     {
+        if ($this->userId !== Yii::$app->request->post('userId')){
+            throw new HttpException(403, 'Access forbidden');
+        }
         $gameData = Yii::$app->cache->get('game_data_' . $this->userId);
         $answer = [
             'status' => Yii::$app->cache->get('game_status_' . $this->userId),

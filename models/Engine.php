@@ -66,16 +66,23 @@ class Engine
     public function startGame(string $user, string $userName = null)
     {
         if (count($this->waitingUsers) > 0) {
-            $oponent = array_shift($this->waitingUsers);
-            $game = new Game($user, $oponent['id'], $userName, $oponent['name']);
-            $id = $game->id;
-            $this->games[$id] = serialize($game);
-            $this->users[$user] = $id;
-            $this->users[$oponent['id']] = $id;
-            return $game;
+            $this->waitingUsers[] = ['id' => $user, 'name' => $userName];
+            return false;
         }
-        $this->waitingUsers[] = ['id' => $user, 'name' => $userName];
-        return false;
+
+        $opponent = array_shift($this->waitingUsers);
+
+        if ($opponent === $user) {
+            $this->waitingUsers[] = ['id' => $user, 'name' => $userName];
+            return false;
+        }
+
+        $game = new Game($user, $opponent['id'], $userName, $opponent['name']);
+        $id = $game->id;
+        $this->games[$id] = serialize($game);
+        $this->users[$user] = $id;
+        $this->users[$opponent['id']] = $id;
+        return $game;
     }
 
     /**
@@ -94,13 +101,27 @@ class Engine
         }
         /**
          * @var Game $game
-        */
+         */
         $game = unserialize($this->games[$gameId], [Game::class]);
         $opponent = $game->user === $user ? $game->user : $game->opponent;
         ArrayHelper::remove($this->games, $gameId);
         ArrayHelper::remove($this->users, $user);
         ArrayHelper::remove($this->users, $opponent);
         return true;
+    }
+
+    /**
+     * @param Step $step
+     * @param string $user
+     * @return Game
+     * @throws HttpException
+     */
+    public function step(Step $step, string $user): Game
+    {
+        $game = $this->getGameByUserId($user);
+        $game->go($step, $user);
+        $this->addGame($game);
+        return $game;
     }
 
     /**
@@ -180,10 +201,23 @@ class Engine
     }
 
     /**
-     * @param array $array
+     * @param Game $game
      */
-    public function addGame(array $array): void
+    public function addGame(Game $game)
     {
-        array_merge($this->games, $array);
+        $this->games[$game->id] = serialize($game);
+    }
+
+    /**
+     * @param string $userId
+     * @return Game
+     * @throws HttpException
+     */
+    public function setOpponentWin(string $userId): Game
+    {
+        $game = $this->getGameByUserId($userId);
+        $game->winner = $game->getOpponentId($userId);
+        $this->addGame($game);
+        return $game;
     }
 }
