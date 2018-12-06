@@ -65,7 +65,7 @@ class Engine
      */
     public function startGame(string $user, string $userName = null)
     {
-        if (count($this->waitingUsers) > 0) {
+        if (count($this->waitingUsers) === 0) {
             $this->waitingUsers[] = ['id' => $user, 'name' => $userName];
             return false;
         }

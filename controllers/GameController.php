@@ -32,7 +32,12 @@ class GameController extends Controller
         parent::__construct($id, $module, $config);
     }
 
-    public function actionStart($name)
+    /**
+     * @param $name
+     * @return \yii\web\Response
+     * @throws \yii\base\Exception
+     */
+    public function actionStart($name): \yii\web\Response
     {
         Yii::$app->session->remove('userId');
         Yii::$app->session->remove('name');
