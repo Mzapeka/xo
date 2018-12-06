@@ -1,7 +1,7 @@
 function Updater(config) {
     let self = this;
     let _deafultConfig = {
-        updateInterval: 500,
+        updateInterval: 1000,
         eventCallback: function (data) {},
         connectionErrorCallback: function () {}
     };

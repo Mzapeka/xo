@@ -11,11 +11,17 @@ function Game(userId, userName) {
         this.waitingPreloaderStop();
         this.clearField();
         $('.xo__field').on('click', '.xo__cells', function (event) {
+            console.log(event);
+            console.log(event);
             if (self.isBlocked) {
                 return;
             }
-            self.move(x, y).success(function () {
+            let x = $(this).attr('data-x');
+            let y = $(this).attr('data-y');
+            self.move(x, y).done(function () {
                 self.waitingPreloaderStart();
+                self.block();
+                self.updater.activate()
             });
         });
 
@@ -43,15 +49,15 @@ function Game(userId, userName) {
 
     this.move = function (x, y) {
         this.block();
-        return $.post('game/step', {x: x, y: y})
-            .error(function () {
-                self.showInfo({type: 'error', text: 'Server Error. Try make step again'})
+        return $.post('/game/step', {x: x, y: y})
+            .fail(function (data) {
+                self.showInfo({type: 'error', text: 'Server Error. Try make step again'});
                 self.unblock();
-            })
+            });
     };
 
     this.endGame = function () {
-        $.post('game/end').error(function () {
+        $.post('/game/end').fail(function () {
             self.showInfo({type: 'error', text: 'End game Error'});
         })
     };
@@ -101,7 +107,7 @@ function Game(userId, userName) {
                 if (self.board[y][x] === 'O') {
                     turnClass = 'xo__cells-o';
                 }
-                element.addClass(turnClass);
+                $(this).addClass(turnClass);
             }
         });
     };
@@ -122,9 +128,11 @@ function Game(userId, userName) {
             if (state.activeUser === self.userId) {
                 self.i = true;
                 self.updater.deactivate();
+                self.unblock();
             } else {
                 self.i = false;
                 self.updater.activate();
+                self.block();
             }
 
             if (state.winner) {
@@ -150,9 +158,9 @@ function Game(userId, userName) {
 }
 
 
-$(document).ready(function () {
+
     let game = new Game(USER_ID, USER_NAME);
     game.init();
-});
+
 
 

@@ -54,10 +54,7 @@ class GameController extends Controller
     public function actionStep(): array
     {
         $step = new Step();
-        if (!$step->load(Yii::$app->request->post())) {
-            throw new HttpException(403, 'Wrong data format passed');
-        }
-
+        $step->setAttributes(Yii::$app->request->post());
         $gameObj = $this->engine->getGameByUserId($this->userId);
 
         if ($step->validate()) {
@@ -72,7 +69,7 @@ class GameController extends Controller
      * @return array
      * @throws HttpException
      */
-    public function actionEndGame(): array
+    public function actionEnd(): array
     {
         $gameObj = $this->engine->getGameByUserId($this->userId);
         $gameObj->winner = $gameObj->getOpponentId($this->userId);

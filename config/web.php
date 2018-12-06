@@ -55,9 +55,13 @@ $config = [
             'enableStrictParsing' => false,
             'rules' => [
                 'GET /start' => 'site/start',
-                'GET /game/start/<name:\w+>' => 'game/start',
+
                 'POST /status/get' => 'status/get',
                 'POST /status/confirm' => 'status/confirm',
+
+                'GET /game/start/<name:\w+>' => 'game/start',
+                'POST /game/step' => 'game/step',
+                'POST /game/end' => 'game/end',
             ],
         ],
 

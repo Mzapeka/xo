@@ -101,9 +101,9 @@ class Game
 
         // check X axes
         foreach ($this->board as $rowNumber => $row) {
-            if (isset($this[$rowNumber]) && count($this[$rowNumber]) === self::SIZE_Y) {
+            if (isset($this->board[$rowNumber]) && count($this->board[$rowNumber]) === self::SIZE_Y) {
                 $countTurnChain = 0;
-                foreach ($this[$rowNumber] as $column) {
+                foreach ($this->board[$rowNumber] as $column) {
                     if ($column !== $turn) {
                         break;
                     }

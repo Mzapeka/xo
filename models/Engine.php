@@ -110,11 +110,11 @@ class Engine
      */
     public function getGameByUserId(string $userId): Game
     {
-        $gameId = $this->engine->users[$userId] ?? false;
+        $gameId = $this->users[$userId] ?? false;
         if (!$gameId) {
             throw new HttpException(404, 'Game not found');
         }
-        $game = $this->engine->games[$gameId] ?? false;
+        $game = $this->games[$gameId] ?? false;
 
         if (!$game) {
             throw new HttpException(404, 'Game not found');
