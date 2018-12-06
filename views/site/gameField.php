@@ -28,6 +28,14 @@
         <span class="ploader-inner-4"></span>
     </div>
 </div>
+
+
+    <div class="panel state-data text-center panel-default">
+        <div class="panel-body">
+            Finding opponent...
+        </div>
+    </div>
+
 <section class="wrapper">
     <div class="informer"></div>
     <section class="xo">

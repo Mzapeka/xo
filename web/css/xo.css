@@ -146,6 +146,10 @@
     75% { transform: translateX(0) translateY(3em); }
 }
 
+.state-data {
+    font-size: 0.1rem;
+}
+
 html, body {
     height: 100%;
     font-size: 200px;

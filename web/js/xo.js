@@ -37,18 +37,10 @@ $(document).ready(function () {
         $('body').animate({
             opacity: 0
         }, 1000);
-        setTimeout(function(){
+
+        setTimeout(function() {
             $(location).attr('href','/game/start/' + encodeURIComponent(name));
         },1000);
-        //$(location).attr('href','/start');
-        //window.location = window.location.host + '/start';
-/*        let jqxhr = $.post('/start', {"name": name})
-            .success(function() {
-
-            })
-            .error(function() { alert("Ошибка выполнения"); })
-            .complete(function() { alert("Завершение выполнения"); });
-            */
     })
 });
 
@@ -63,8 +55,9 @@ function escapeInput(text) {
         "/": '&#x2F;'
     };
 
-    return String(text).replace(/[&<>"'\/]/g, function (s) {
-        return entityMap[s];
+    return String(text).replace(/[&<>"',.\/\[\]]/g, function (s) {
+        //return entityMap[s];
+        return '';
     });
 }
 

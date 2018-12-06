@@ -19,7 +19,7 @@ class Game
 
     const LENGTH_TO_WIN = 3;
 
-    const NO_WINNER_STATUS = 'none';
+    const NO_WINNER_STATUS = 'not_win';
 
     const GAME_STATUS_NO_ACTION = 'no_action';
     const GAME_STATUS_UPDATE = 'update';
@@ -66,20 +66,16 @@ class Game
      */
     public function go(Step $step, string $user): ?bool
     {
-        if (ArrayHelper::getValue($this->board, [$step->x, $step->y], false)) {
+        if (ArrayHelper::getValue($this->board, [$step->y, $step->x], false)) {
             throw new HttpException(422, 'This cell already hold.');
         }
-        ArrayHelper::setValue($this->board, [$step->x, $step->y], $this->getTurn($user));
+        ArrayHelper::setValue($this->board, [$step->y, $step->x], $this->getTurn($user));
         $this->steps++;
         $this->switchTurn();
         $winner = $this->checkWinner($this->getTurn($user));
-        switch ($winner) {
-            case true:
-                $this->winner = $user;
-                break;
-            case self::NO_WINNER_STATUS:
-                $this->winner = self::NO_WINNER_STATUS;
-                break;
+        if ($winner === true) {
+            $this->winner = $user;
+            $winner = $user;
         }
         return $winner;
     }

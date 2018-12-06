@@ -25,13 +25,15 @@ function Game(userId, userName) {
             });
         });
 
-        $('#end-game').on('click', function () {
-            self.endGame();
+        $('#end-game').on('click', function (event) {
+            self.endGame(event);
         });
 
-        $('#new-game').on('click', function () {
-            $(location).attr('href','/start/' + encodeURIComponent(self.userName))
+        $('.informer').on('click', '.new-game', function () {
+            $(location).attr('href', '/game/start/' + encodeURIComponent(self.userName))
         });
+
+
 
         this.startInitPreloader();
         this.updater.init();
@@ -55,10 +57,21 @@ function Game(userId, userName) {
             });
     };
 
-    this.endGame = function () {
-        $.post('/game/end').fail(function () {
-            self.showInfo({type: 'error', text: 'End game Error'});
-        })
+    this.endGame = function (event) {
+        $.post('/game/end')
+            .fail(function () {
+                self.showInfo({type: 'error', text: 'End game Error'});
+            })
+            .done(function () {
+                event.preventDefault();
+                $('body').animate({
+                    opacity: 0
+                }, 1000);
+
+                setTimeout(function() {
+                    $(location).attr('href','/');
+                },1000);
+            })
     };
 
     this.clearField = function () {
@@ -112,12 +125,19 @@ function Game(userId, userName) {
     };
 
     this.endGameScrinShow = function (state) {
+        if (state.winner === 'not_win') {
+            message = 'Ничья!';
+        }
+        message = 'You ' + (state.winner === self.userId ? 'WIN!!! ' : 'lose ( ');
+        message += '<button id="new-game" class="btn btn-lg btn-success new-game">New Game</button>';
 
+        self.showInfo({type: "success", text: message});
     };
 
     this.stateHandler = function (state) {
         self.waitingPreloaderStop();
         self.stopInitPreloader();
+        $('.panel .panel-body').text(state.yourName + ' VS ' + state.opponentName);
         if (typeof (state) === 'object') {
             self.board = state.board;
             self.turn = state.currentTurn;
@@ -136,10 +156,6 @@ function Game(userId, userName) {
 
             if (state.winner) {
                 self.updater.deactivate();
-                if (state.winner === 'none') {
-                    this.endGameScrinShow();
-                    return;
-                }
                 self.endGameScrinShow(state);
             }
         }
@@ -157,8 +173,8 @@ function Game(userId, userName) {
     });
 }
 
-    let game = new Game(USER_ID, USER_NAME);
-    game.init();
+let game = new Game(USER_ID, USER_NAME);
+game.init();
 
 
 
