@@ -13,6 +13,11 @@ $(document).ready(function () {
 
     $('#submit-name').on('click', function (event) {
         let nameString = $('#input-name').val();
+        if (nameString === '') {
+            alert({type: 'warning', text: 'Name cann\'t be empty'});
+            $('#add-name-modal').modal('hide');
+            return;
+        }
         if (nameString.length > 20) {
             alert({type: 'warning', text: 'Length of name should be less then 20 later'});
             $('#add-name-modal').modal('hide');
@@ -22,10 +27,10 @@ $(document).ready(function () {
         alert({type: 'success', text: 'Hi ' + name + '! Welcome to our battle!'});
         $('#add-name-modal').modal('hide');
         $('#enter-name').html(name).attr('disabled', 'disabled');
-    })
+    });
 
     $('#start-game').on('click', function (event) {
-        if (name == null) {
+        if (name === '') {
             alert({type: 'warning', text: 'Please, enter the name'});
             return;
         }

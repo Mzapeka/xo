@@ -75,7 +75,9 @@ class Game
         $winner = $this->checkWinner($this->getTurn($user));
         if ($winner === true) {
             $this->winner = $user;
-            $winner = $user;
+        }
+        if ($winner === self::NO_WINNER_STATUS){
+            $this->winner = $winner;
         }
         return $winner;
     }
@@ -91,10 +93,6 @@ class Game
      */
     private function checkWinner(string $turn)
     {
-        if ((count($this->board, COUNT_RECURSIVE) - count($this->board)) === self::SIZE_X * self::SIZE_Y) {
-            return self::NO_WINNER_STATUS;
-        }
-
         // check X axes
         foreach ($this->board as $rowNumber => $row) {
             if (isset($this->board[$rowNumber]) && count($this->board[$rowNumber]) === self::SIZE_Y) {
@@ -147,6 +145,11 @@ class Game
                 return true;
             }
         }
+
+        if ((count($this->board, COUNT_RECURSIVE) - count($this->board)) === self::SIZE_X * self::SIZE_Y) {
+            return self::NO_WINNER_STATUS;
+        }
+
         return false;
     }
 

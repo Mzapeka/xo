@@ -127,11 +127,13 @@ function Game(userId, userName) {
     this.endGameScrinShow = function (state) {
         if (state.winner === 'not_win') {
             message = 'Ничья!';
+        } else {
+            message = 'You ' + (state.winner === self.userId ? 'WIN!!! ' : 'lose ( ');
         }
-        message = 'You ' + (state.winner === self.userId ? 'WIN!!! ' : 'lose ( ');
-        message += '<button id="new-game" class="btn btn-lg btn-success new-game">New Game</button>';
 
-        self.showInfo({type: "success", text: message});
+        message += '<button id="new-game" class="btn btn-sm btn-success new-game">New Game</button>';
+
+        self.showInfo({type: (state.winner === self.userId ? "success" : "danger"), text: message});
     };
 
     this.stateHandler = function (state) {
@@ -145,10 +147,12 @@ function Game(userId, userName) {
             self.renderField();
 
             if (state.activeUser === self.userId) {
+                self.showInfo({type: 'warning', text: 'Your turn: ' + self.turn});
                 self.i = true;
                 self.updater.deactivate();
                 self.unblock();
             } else {
+                self.showInfo({type: 'success', text: 'Opponent turn'});
                 self.i = false;
                 self.updater.activate();
                 self.block();
