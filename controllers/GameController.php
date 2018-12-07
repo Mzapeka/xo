@@ -22,6 +22,14 @@ class GameController extends Controller
     private $engine;
     private $userId;
 
+    /**
+     * GameController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param Engine $engine
+     * @param array $config
+     * @throws HttpException
+     */
     public function __construct(string $id, Module $module, Engine $engine, array $config = [])
     {
         $this->userId = Yii::$app->session->get('userId');

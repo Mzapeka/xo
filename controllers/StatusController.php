@@ -18,6 +18,13 @@ class StatusController extends Controller
 {
     private $userId;
 
+    /**
+     * StatusController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param array $config
+     * @throws HttpException
+     */
     public function __construct(string $id, Module $module, array $config = [])
     {
         $this->userId = Yii::$app->session->get('userId');
@@ -27,7 +34,11 @@ class StatusController extends Controller
         parent::__construct($id, $module, $config);
     }
 
-    public function actionGet()
+    /**
+     * @return array
+     * @throws HttpException
+     */
+    public function actionGet(): array
     {
         if ($this->userId !== Yii::$app->request->post('userId')){
             throw new HttpException(403, 'Access forbidden');
@@ -40,6 +51,9 @@ class StatusController extends Controller
         return $answer;
     }
 
+    /**
+     * @return array
+     */
     public function actionConfirm(): array
     {
         Yii::$app->cache->set('game_status_' . $this->userId, Game::GAME_STATUS_NO_ACTION, 60 * 3);

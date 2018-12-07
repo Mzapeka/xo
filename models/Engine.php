@@ -160,7 +160,7 @@ class Engine
     }
 
     /**
-     *
+     * saving data to DB
      */
     public function save(): void
     {
@@ -176,6 +176,7 @@ class Engine
     }
 
     /**
+     * Блокируем объект в базе
      * @return bool
      */
     private function blockEngine(): bool

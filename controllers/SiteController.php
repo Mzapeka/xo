@@ -4,25 +4,9 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
